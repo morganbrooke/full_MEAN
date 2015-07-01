@@ -25,6 +25,13 @@ friends_app.factory('FriendFactory', function($http) {
     // friends.push({name: info.name, age: info.age});
     // callback(friends);
   }
+  factory.destroyFriend = function(req,callback) {
+  	console.log("in factory");
+  	$http.delete('/destroy/'+req._id).success(function(info){
+  		callback(info);
+  		console.log("in end of factory");
+  	})
+  }
   return factory;
 });
 
@@ -45,6 +52,14 @@ friends_app.controller('FriendsController', function(FriendFactory) {
     		that.new_friend = {};
   		})
   	}
+  	that.destroyfriend = function(friend) {
+  		console.log("in controller");
+  		FriendFactory.destroyFriend(friend, function(){
+  			FriendFactory.getFriends(function(data){
+  				that.friends = data;
+  			})
+  		})
+  	}
 });
 
   </script>
@@ -57,7 +72,7 @@ friends_app.controller('FriendsController', function(FriendFactory) {
   <ul>
     <!-- here is where we are going to display friends -->
     <li ng-repeat="friend in fc.friends | filter: fc.filter_name">
-      {{friend.name}}, {{friend.age}}
+      {{friend.name}}, {{friend.age}} <button type="button" ng-click="fc.destroyfriend(friend)" value="destroy">Remove</button>
     </li>
   </ul>
   <h1>Add a Friend</h1>

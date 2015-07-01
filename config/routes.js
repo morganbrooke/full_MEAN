@@ -8,4 +8,8 @@ module.exports = function(app) {
     app.post('/add', function(req,res){
     	friends.add(req,res)
     })
+    app.delete('/destroy/:id', function(req,res){
+    	console.log("in routes");
+    	friends.destroy(req,res);
+    })
 };
